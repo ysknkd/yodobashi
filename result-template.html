@@ -3,7 +3,108 @@
   <head>
   </head>
   <body>
-    <div id="result">
+    <style type="text/css">
+      body {
+        margin: 0;
+        padding: 0;
+      }
+
+      .backgroundContainer {
+        z-index: -1;
+        position: fixed;
+        left: 0;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        background: #FFF;
+        border: 1px solid #CCC;
+        border-radius: 2px;
+      }
+
+      .hContainer .bar {
+        z-index: 99;
+        position: fixed;
+        top: 0;
+        right: 0;
+        left: 0;
+        height: 24px;
+        padding: 8px;
+        display: -webkit-box;
+        background: #F6F6F6;
+      }
+
+      .hContainer .bar button {
+        height: 24px;
+        width: 24px;
+      }
+
+      .hContainer .bar .searchWord {
+        margin: 0;
+        padding: 0 8px;
+        height: 24px;
+        line-height: 24px;
+        font-size: 0.5rem;
+        font-weight: 600;
+        white-space: nowrap;
+      }
+
+      .pContainer {
+        margin: 40px 0 0 0;
+        padding: 4px;
+        height: 260px;
+        overflow: scroll:
+      }
+
+      .pItemList {
+        margin: 0;
+        padding: 0;
+      }
+      
+      .pItem {
+        overflow: hidden;
+        margin: 0;
+        padding: 4px;
+        height: 72px;
+        list-style: none;
+        border-bottom: 1px solid #EEE;
+      }
+
+      .pItem a {
+        display: -webkit-box;
+      }
+
+      .pItem img {
+        height: 64px;
+        border: 1px solid #CCC;
+        border-radius: 4px;
+      }
+
+      .pTextContainer {
+        padding: 0 0 0 4px;
+        white-space: nowrap;
+        font-size: 0.7rem;
+      }
+
+      .pTextContainer p {
+        margin: 0;
+      }
+
+    </style>
+    <script>
+      function closeSearchInYodobashi() {
+        const iframe = window.parent.document.querySelector('#search_in_yodobashi')
+        iframe.parentNode.removeChild(iframe)
+      }
+    </script>
+    <div class="backgroundContainer"></div>
+    <div class="hContainer">
+      <div class="bar">
+        <button class="close" onClick="closeSearchInYodobashi()">x</button>
+        <p class="searchWord"></p>
+      </div>
+    </div>
+    <div id="result" class="pContainer">
+
     </div>
   </body>
 </html>

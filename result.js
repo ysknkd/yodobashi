@@ -1,32 +1,74 @@
 
-/**
- * @param {object} dom - append dom
- */
-async function inject(json) {
-  const iframe = document.createElement('iframe')
-  const template = await fetch(chrome.extension.getURL('/result-template.html'))
+function fetchResultTemplate() {
+  return fetch(chrome.extension.getURL('/result-template.html'))
     .then(res => res.text())
     .then(html => {
       const parser = new DOMParser()
       const dom = parser.parseFromString(html, 'text/html')
       return dom
     })
-    .catch(() => null)
+}
 
-  if (!template) {
-    console.error('cannot find the template')
-    return
+function generateResultDom(results) {
+  const ul = document.createElement('ul')
+  ul.className = 'pItemList'
+
+  for (const res of results) {
+    const li = document.createElement('li')
+    li.className = 'pItem'
+
+    const a = document.createElement('a')
+    a.href = res.href
+    a.target = '_blank'
+
+    const img = document.createElement('img')
+    img.className = 'pImg'
+    img.src = res.src
+
+    const textContainer = document.createElement('div')
+    textContainer.className = 'pTextContainer'
+
+    const name = document.createElement('p')
+    name.textContent = res.name
+
+    const price = document.createElement('p')
+    price.textContent = res.price
+
+    textContainer.appendChild(name)
+    textContainer.appendChild(price)
+
+    a.appendChild(img)
+    a.appendChild(textContainer)
+    li.appendChild(a)
+    ul.appendChild(li)
   }
 
-  template.body.querySelector('#result').textContent = JSON.stringify(json)
+  return ul
+}
+
+async function inject(word, json) {
+  const template = await fetchResultTemplate().catch(() => null)
+  if (!template) {
+    console.error('cannot load the template')
+    return
+  }
+  template.body.querySelector('.searchWord').textContent = `"${word}" の検索結果 / Top 10`
+  template.body.querySelector('#result').appendChild(generateResultDom(json))
+
+  let iframe = document.querySelector('#search_in_yodobashi')
+  if (!iframe) {
+    iframe = document.createElement('iframe')
+    iframe.id = 'search_in_yodobashi'
+    iframe.style = 'border: none; display: block; height: 320px; overflow: hidden; position: fixed; right: 8px; top: 8px; left: auto; float: none; width: 335px; z-index: 2147483647; background: transparent; filter: drop-shadow(0px 3px 3px rgba(0,0,0,0.6));'
+    document.body.appendChild(iframe)
+  }
   iframe.srcdoc = template.body.innerHTML
-  iframe.style = 'border: none; display: block; height: 260px; overflow: hidden; position: fixed; right: 0px; top: 0px; left: auto; float: none; width: 335px; z-index: 2147483647; background: transparent;'
-  document.body.appendChild(iframe)
 }
 
 function result() {
-  chrome.storage.sync.get('json', async (data) => {
-    inject(data.json)
+  chrome.storage.sync.get(['word', 'json'], async (data) => {
+    console.log(data)
+    inject(data.word, data.json)
   })
 }
 result()

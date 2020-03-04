@@ -1,18 +1,18 @@
-chrome.runtime.onInstalled.addListener(() => {
-  chrome.storage.sync.set({color: '#3aa757'}, () => {
-    console.log('The color is green')
-  })
-  chrome.declarativeContent.onPageChanged.removeRules(undefined, () => {
-    chrome.declarativeContent.onPageChanged.addRules([{
-      conditions: [
-        new chrome.declarativeContent.PageStateMatcher({
-          pageUrl: {hostEquals: 'developer.chrome.com'},
-        })
-      ],
-      actions: [new chrome.declarativeContent.ShowPageAction()]
-    }])
-  })
-})
+//chrome.runtime.onInstalled.addListener(() => {
+//  chrome.storage.sync.set({color: '#3aa757'}, () => {
+//    console.log('The color is green')
+//  })
+//  chrome.declarativeContent.onPageChanged.removeRules(undefined, () => {
+//    chrome.declarativeContent.onPageChanged.addRules([{
+//      conditions: [
+//        new chrome.declarativeContent.PageStateMatcher({
+//          pageUrl: {hostEquals: 'developer.chrome.com'},
+//        })
+//      ],
+//      actions: [new chrome.declarativeContent.ShowPageAction()]
+//    }])
+//  })
+//})
 
 /**
  * @param {string} word - words for search
@@ -34,14 +34,17 @@ function searchInYodobashi(word) {
  * @returns JSON
  */
 function extractResultsWithJson(dom) {
+  const kUrl = 'https://www.yodobashi.com'
   const results = dom.querySelectorAll('#listContents > .spt_hznList > .pListBlock')
 
   const json = []
   for (let i = 0, max = 10; i < max; i += 1) {
     const result = results[i]
     const item = {
-      href: result.querySelector('a.js_productListPostTag').href,
-      src: result.querySelector('.pImg > img').src
+      href: `${kUrl}${result.querySelector('a.js_productListPostTag').pathname}`,
+      src: result.querySelector('.pImg img').src,
+      name: Array.from(result.querySelector('.js_productListPostTag').querySelectorAll('.pName p')).map(p => p.textContent).join(' / '),
+      price: result.querySelector('.pInfo .productPrice').textContent
     }
     json.push(item)
   }
@@ -60,8 +63,7 @@ async function search(word, inTab = false) {
   }
 
   const json = await searchInYodobashi(word).then(dom => extractResultsWithJson(dom)).catch(() => null)
-  chrome.storage.sync.set({json: json}, () => {
-    console.log(json)
+  chrome.storage.sync.set({word: word, json: json}, () => {
     chrome.tabs.query({
       active: true,
       currentWindow: true
