@@ -9,6 +9,12 @@
     "storage",
     "https://www.yodobashi.com/*"
   ],
+  "content_scripts": [
+    {
+      "matches": ["https://*/*"],
+      "js": ["result.js"]
+    }
+  ],
   "background": {
     "scripts": ["background.js"],
     "persistent": false

@@ -62,14 +62,18 @@ async function search(word, inTab = false) {
     return
   }
 
+  chrome.tabs.query({
+    active: true,
+    currentWindow: true
+  }, (tabs) => {
+    chrome.tabs.sendMessage(tabs[0].id, {message: 'MSG_START_SEARCH', word})
+  })
   const json = await searchInYodobashi(word).then(dom => extractResultsWithJson(dom)).catch(() => null)
-  chrome.storage.sync.set({word: word, json: json}, () => {
-    chrome.tabs.query({
-      active: true,
-      currentWindow: true
-    }, (tabs) => {
-      chrome.tabs.executeScript(tabs[0].id, {file: 'result.js'})
-    })
+  chrome.tabs.query({
+    active: true,
+    currentWindow: true
+  }, (tabs) => {
+    chrome.tabs.sendMessage(tabs[0].id, {message: 'MSG_END_SEARCH', word, json})
   })
 }
 
