@@ -32,6 +32,10 @@ function generateResultDom(results) {
   ul.className = 'pItemList'
 
   if (!results) {
+    const li = document.createElement('li')
+    li.className = 'pItemNoMatch'
+    li.textContent = '一致する情報は見つかりませんでした'
+    ul.appendChild(li)
     return ul
   }
   for (const res of results) {
