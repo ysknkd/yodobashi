@@ -84,12 +84,15 @@ chrome.contextMenus.create({
   contexts: ["selection"]
 })
 chrome.contextMenus.onClicked.addListener(async (info) => {
-  switch(info.menuItemId) {
-    case 'search_in_yodobashi':
-      search(info.selectionText)
-      break
-    default:
-      break
-  }
+  chrome.storage.sync.get('type', (data) => {
+    const isTab = (data.type || 'frame') === 'tab'
+    switch(info.menuItemId) {
+      case 'search_in_yodobashi':
+        search(info.selectionText, isTab)
+        break
+      default:
+        break
+    }
+  })
 })
 
