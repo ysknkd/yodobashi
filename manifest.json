@@ -1,6 +1,6 @@
 {
   "name": "Search in yodobashi",
-  "version": "1.0",
+  "version": "0.5.0",
   "description": "Search in yodobashi",
   "permissions": [
     "activeTab",

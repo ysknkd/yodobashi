@@ -1,7 +1,12 @@
 
 ## Description
 
-https://developer.chrome.com/extensions/getstarted
+選択した文字列をヨドバシで検索するための Chrome Extension です。
+
+## Development
+
+* ページ読み込みの際に `result.js` と `background.js` がロードされ、 `result.js` は `background.js` からのメッセージを待機します。
+* 選択した文字列を検索する際に、クロスオリジンの制約を回避するために `background.js` で通信し結果を `result.js` に送信します。
 
 ## ToDo
 
@@ -13,12 +18,8 @@ https://developer.chrome.com/extensions/getstarted
 * [x] iframe がすでに存在する場合は再利用する
 * [x] ユーザが iframe をとじることができる
 * [x] リクエスト時にローディング画面を表示する
-* [ ] ポイントを表示する
+* [x] ポイントを表示する
 * [ ] 結果が存在しなかった場合にその旨を表示する
 * [ ] ユーザがオプションで、タブで開くと iframe で開くを選択できるようにする
 * [ ] 表示結果のデザインを見直す
 
-
-## Notes
-
-* https://stackoverflow.com/questions/25107774/how-do-i-send-an-http-get-request-in-chrome-extension/25107925

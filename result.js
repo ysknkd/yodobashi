@@ -1,3 +1,4 @@
+// ---- BEGIN CHROME EXTENSION FUNCTIONS
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   const message = request.message || 'MSG_UNKNOWN'
 
@@ -13,7 +14,9 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
       break
   }
 })
+// ---- END CHROME EXTENSION FUNCTIONS
 
+// ---- BEGIN DOM CONTROLLER
 function fetchResultTemplate() {
   return fetch(chrome.extension.getURL('/result-template.html'))
     .then(res => res.text())
@@ -28,7 +31,6 @@ function generateResultDom(results) {
   const ul = document.createElement('ul')
   ul.className = 'pItemList'
 
-  console.log(results)
   if (!results) {
     return ul
   }
@@ -53,8 +55,12 @@ function generateResultDom(results) {
     const price = document.createElement('p')
     price.textContent = res.price
 
+    const point = document.createElement('p')
+    point.textContent = res.point
+
     textContainer.appendChild(name)
     textContainer.appendChild(price)
+    textContainer.appendChild(point)
 
     a.appendChild(img)
     a.appendChild(textContainer)
@@ -74,7 +80,9 @@ function initFrame() {
     document.body.appendChild(iframe)
   }
 }
+// ---- END DOM CONTROLLER
 
+// ---- BEGIN MESSAGE HANDLER ----
 async function onStartSearch(word) {
   const template = await fetchResultTemplate().catch(() => null)
   if (!template) {
@@ -98,4 +106,5 @@ async function onEndSearch(word, json) {
   let iframe = document.querySelector('#search_in_yodobashi')
   iframe.srcdoc = template.body.innerHTML
 }
+// ---- END MESSAGE HANDLER
 
