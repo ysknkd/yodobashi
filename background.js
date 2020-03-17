@@ -53,6 +53,15 @@ function extractResultsWithJson(dom) {
   return json
 }
 
+function sendMessage(message) {
+  chrome.tabs.query({
+    active: true,
+    currentWindow: true
+  }, (tabs) => {
+    chrome.tabs.sendMessage(tabs[0].id, message)
+  })
+}
+
 async function search(word, inTab = false) {
   if (inTab) {
     const reqUrl = `https://www.yodobashi.com/?word=${word}`
@@ -63,19 +72,9 @@ async function search(word, inTab = false) {
     return
   }
 
-  chrome.tabs.query({
-    active: true,
-    currentWindow: true
-  }, (tabs) => {
-    chrome.tabs.sendMessage(tabs[0].id, {message: 'MSG_START_SEARCH', word})
-  })
+  sendMessage({message: 'MSG_START_SEARCH', word})
   const json = await searchInYodobashi(word).then(dom => extractResultsWithJson(dom)).catch(() => null)
-  chrome.tabs.query({
-    active: true,
-    currentWindow: true
-  }, (tabs) => {
-    chrome.tabs.sendMessage(tabs[0].id, {message: 'MSG_END_SEARCH', word, json})
-  })
+  sendMessage({message: 'MSG_END_SEARCH', word, json})
 }
 
 chrome.contextMenus.create({
