@@ -25,7 +25,7 @@
 * [x] パッケージ化してみる
   * パッケージ化した拡張機能をインストールするにはアップロードするしかなさそう
   * https://stackoverflow.com/questions/56930454/chrome-extension-throws-crx-file-error-crx-requird-proof-missing
-* [ ] バッケージ化に必要なデータを作る（スクリーンショットとか）
-* [ ] アイコンを作る
+* [x] アイコンを作る
 * [ ] 表示結果のデザインを見直す
+* [ ] バッケージ化に必要なデータを作る（スクリーンショットとか）
 
