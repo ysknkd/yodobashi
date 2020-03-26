@@ -6,7 +6,7 @@
 ## Development
 
 * ページ読み込みの際に `result.js` と `background.js` がロードされ、 `result.js` は `background.js` からのメッセージを待機します
-* 選択した文字列を検索する際に、クロスオリジンの制約を回避するために `background.js` で通信し結果を `result.js` に送信します
+* 選択した文字列を検索する際に、クロスドメインの制約を回避するために `background.js` で通信し結果を `result.js` に送信します
 * ヨドバシは API がないっぽいのでスクレイピングしています
 
 ## ToDo
